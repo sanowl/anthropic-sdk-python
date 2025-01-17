@@ -11,7 +11,6 @@ import platform
 import warnings
 import email.utils
 from types import TracebackType
-from random import random
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -87,6 +86,7 @@ from ._exceptions import (
     APIResponseValidationError,
 )
 from ._legacy_response import LegacyAPIResponse
+import secrets
 
 log: logging.Logger = logging.getLogger(__name__)
 
@@ -668,7 +668,7 @@ class BaseClient(Generic[_HttpxClientT, _DefaultStreamT]):
         sleep_seconds = min(INITIAL_RETRY_DELAY * pow(2.0, nb_retries), MAX_RETRY_DELAY)
 
         # Apply some jitter, plus-or-minus half a second.
-        jitter = 1 - 0.25 * random()
+        jitter = 1 - 0.25 * secrets.SystemRandom().random()
         timeout = sleep_seconds * jitter
         return timeout if timeout >= 0 else 0
 
